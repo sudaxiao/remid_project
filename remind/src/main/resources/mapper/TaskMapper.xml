@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dfire.mapper.TaskMapper">
+    <resultMap id="BaseResultMap" type="com.dfire.domain.Task">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="number" property="number" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="time" property="time" jdbcType="BIGINT"/>
+        <result column="is_finish" property="isFinish" jdbcType="TINYINT"/>
+        <result column="last_ver" property="lastVer" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="base_column_list">
+        id,number,name,time,is_finish,last_ver
+    </sql>
+    <select id="selectAll" parameterType="com.dfire.domain.Task" resultMap="BaseResultMap">
+        SELECT
+        <include refid="base_column_list"/>
+        FROM
+        `task`
+    </select>
+</mapper>

@@ -8,15 +8,36 @@
         <result column="time" property="time" jdbcType="BIGINT"/>
         <result column="is_finish" property="isFinish" jdbcType="TINYINT"/>
         <result column="last_ver" property="lastVer" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="BIGINT"/>
     </resultMap>
 
     <sql id="base_column_list">
-        id,number,name,time,is_finish,last_ver
+        id,number,name,time,is_finish,last_ver,create_time
     </sql>
     <select id="selectAll" parameterType="com.dfire.domain.Task" resultMap="BaseResultMap">
         SELECT
         <include refid="base_column_list"/>
         FROM
         `task`
+    </select>
+
+    <insert id="insert" parameterType="com.dfire.domain.Task">
+        INSERT INTO
+        `task` (id,number,name,time,is_finish,last_ver)
+        VALUES (#{id, jdbcType = VARCHAR}, #{number, jdbcType = INTEGER}, #{name, jdbcType = VARCHAR},#{ time, jdbcType = BIGINT},#{isFinish, jdbcType = TINYINT}, 0)
+    </insert>
+
+    <select id="selectMaxNumber" resultType="java.lang.Integer">
+        SELECT Max(number) FROM `task`
+    </select>
+    <delete id="deleteById" parameterType="java.lang.String">
+        DELETE  FROM `task` WHERE id = #{id,jdbcType=VARCHAR}
+    </delete>
+
+    <select id="selectById" parameterType="java.lang.String" resultType="com.dfire.domain.Task">
+        SELECT
+        <include refid="base_column_list"/>
+        FROM `task`
+        WHERE id = #{id,jdbcType=VARCHAR}
     </select>
 </mapper>

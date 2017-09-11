@@ -1,6 +1,7 @@
 package com.dfire.service;
 
-import com.dfire.domain.Task;
+import com.dfire.util.JsonResponse;
+import com.dfire.vo.TaskVo;
 
 import java.util.List;
 
@@ -9,5 +10,11 @@ import java.util.List;
  */
 public interface TaskService {
 
-    List<Task> findAll();
+    List<TaskVo> findAll();
+
+    JsonResponse add(String name, String time);
+
+    JsonResponse deleteById(String id);
+
+    JsonResponse selectById(String id);
 }

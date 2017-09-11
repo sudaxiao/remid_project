@@ -12,49 +12,105 @@
 <body>
 <div class="container">
     <div id="toolbar">
-        <a href="javascript:void(0);" class="btn btn-primary btn-xs" onclick="resource_addWindow('');"><i class="icon iconfont">&#xe611;</i>新增</a>
-        <a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="wf.resource_delete();"><i class="icon iconfont">&#xe612;</i>删除</a>
+        <div class="btn-group">
+            <button class="btn btn-primary btn-md" data-toggle="modal" data-target="#addTask">新增</button>
+        </div>
     </div>
     <table id="table" class="table table-striped table-bordered table-hover">
     </table>
 </div>
 
-
-<div class="form-group">
-    <div class="input-group date form_datetime col-md-5" data-date="2017-09-01T06:00:00Z" data-date-format="yyyy-mm-dd HH:ii:ss" data-link-field="dtp_input1">
-        <input class="form-control" size="16" type="text" value="" readonly>
-        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+<div class="modal fade in" id="addTask" tabindex="-1" role="dialog" aria-labelledby="addTask" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="addTitle">添加任务</h4>
+            </div>
+            <form class="form form-default add-form" role="form">
+                <div class="modal-body">
+                    <div class="input-group">
+                        <span class="input-group-addon">任务名称</span>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                    <br>
+                    <div class="input-group date form_datetime " data-date="2017-09-01T16:00:00Z" data-date-format="yyyy-mm-dd hh:ii:ss">
+                        <span class="input-group-addon">完成时间</span>
+                        <input class="form-control" size="16" type="text" value="" readonly name="time">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary add-btn" data-dismiss="modal">提交</button>
+                </div>
+            </form>
+        </div>
     </div>
-    <input type="hidden" id="dtp_input1" value="" /><br/>
+</div>
+<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#confirmModal">显示</button>
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModal" aria-hidden="false" data-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="confirmModalLabel" >标题</h4>
+            </div>
+            <div class="modal-body" id="confirmModalBody"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="confirmModalBtn">确定</button>
+            </div>
+        </div>
+    </div>
 </div>
 
+<div id="alertSuccess" class="alert alert-success text-center fade in" style="position: fixed; right: 0px;top: 0px;width: 100%;display: none" >
+    <strong id="successText"></strong>
+</div>
+<div id="alertFailure" class="alert alert-danger text-center fade in" style="position: fixed; right: 0px;top: 0px;width: 100%;display: none" >
+    <strong id="failureText"></strong>
+</div>
 <script type="text/javascript" src="/js/jquery-1.8.3.min.js" charset="UTF-8"></script>
 <script type="text/javascript" src="/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
 <script type="text/javascript" src="/js/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
-
 <script type="text/javascript" src="/js/bootstrap-table.min.js"></script>
 <script type="text/javascript" src="/js/bootstrap-table-zh-CN.min.js"></script>
 <script type="text/javascript">
     $(function () {
-        $(function () {
-            var oTable = new TableInit();
-            oTable.init();
+        var oTable = new TableInit();
+        oTable.init();
 
-            var oDatePicker = new DatePickerInit();
-            oDatePicker.init();
-        });
+        var oDatePicker = new DatePickerInit();
+        oDatePicker.init();
+
+
+        $('.add-btn').on('click', function () {
+            var data = $('.add-form').serialize();
+            var submitData = decodeURIComponent(data, true);
+            $.ajax({
+                url: "/remind/add",
+                dataType: "json",
+                type: "post",
+                data: submitData,
+                success: function (data) {
+                   successMsg(data);
+                }
+            });
+        })
+
     });
 
     var DatePickerInit = function () {
         var oDatePickerInit = new Object();
         oDatePickerInit.init = function () {
             $('.form_datetime').datetimepicker({
-                language:  'zh-CN',
+                language: 'zh-CN',
                 weekStart: 1,
-                todayBtn:  1,
-                autoclose: 1,
+                todayBtn: 1,
+                autoClose: 1,
                 todayHighlight: 1,
                 startView: 2,
                 forceParse: 0,
@@ -66,7 +122,7 @@
     var TableInit = function () {
         var oTableInit = new Object();
         oTableInit.init = function () {
-            var $table=$('#table');
+            var $table = $('#table');
             $table.bootstrapTable({
                 url: '/remind/show',         //请求后台的URL（*）
                 method: 'post',             //请求方式（*）
@@ -78,14 +134,12 @@
                 showRefresh: true,           //是否显示刷新按钮
                 showPaginationSwitch: true,  //是否显示选择分页数按钮
                 pageNumber: 1,              //初始化加载第一页，默认第一页
-                pageSize: 3,                //每页的记录行数（*）
+                pageSize: 5,                //每页的记录行数（*）
                 sidePagination: "client",
-                pageList:[10,25,50,100],
+                pageList: [5, 10, 25, 50],
                 search: true,
-                uniqueId:'id',
-                columns: [{
-                    checkbox: true,
-                }, {
+                uniqueId: 'id',
+                columns: [ {
                     field: 'number',
                     title: '序号'
                 }, {
@@ -96,11 +150,91 @@
                     title: '预计完成时间'
                 }, {
                     field: 'isFinish',
-                    title: '是否完成'
-                }, ]
+                    title: '是否完成',formatter: function (val){
+                        if(val != undefined && val == true){
+                            return "已完成";
+                        }
+                        return "未完成";
+                    }
+                },{
+                    field: 'progress',
+                    title: "剩余时间",
+                    formatter: function (val, row) {
+                        return '<div class="progress">'+
+                            '<div class="progress-bar '+row.color+'" role="progressbar"'+
+                        'aria-valuenow='+val+' aria-valuemin="0" aria-valuemax="100"'+
+                       ' style="width: '+val+'%;"><span class="sr-only"></span></div></div>';
+                    }
+                },{
+                    field: 'progress',
+                    title: "操作",
+                    formatter: function (val, row) {
+                        return '<a href="javascript:editTask()"><i class="glyphicon glyphicon-edit" ></i></a>&nbsp;&nbsp;'+
+                               '<a href="javascript:delTask(\''+row.id+'\')"><i class="glyphicon glyphicon-remove" ></i></a>';
+                    }
+                }
+                ]
             });
         }
         return oTableInit;
+    }
+    function editTask() {
+
+    }
+    function delTask(id) {
+        $('#confirmModalLabel').text("删除操作");
+        $.ajax({
+            url:"/remind/find",
+            method: "post",
+            dataType: "json",
+            data: "id="+id,
+            success :function (data) {
+                $('#confirmModalBody').html("确认要删除任务: <span style='color: #ff775a; '> "+data.data.name+" </span>?");
+            }
+        });
+        $('#confirmModal').modal('show');
+        $('#confirmModalBtn').on('click',function () {
+            $.ajax({
+                url:"/remind/del",
+                method: "post",
+                dataType: "json",
+                data: "id="+id,
+                success :function (data) {
+                    successMsg(data)
+                }
+
+            })
+        });
+
+    }
+    function successMsg(data) {
+        if (data.success == true) {
+            success(data.message);
+        } else {
+            failure(data.message);
+        }
+    }
+    function success(msg) {
+        $('#alertSuccess').css("display","block");
+
+        $('#alertSuccess #successText').text(msg);
+        $('#alertSuccess').animate({
+            top:"0px"
+        },1000);
+        $('#alertSuccess').animate({
+            top:"-100px"
+        },1000);
+    }
+    function failure(msg) {
+        $('#alertFailure').css("display","block");
+
+        $('#alertFailure #failureText').text(msg);
+        $('#alertFailure').animate({
+            top:"0px"
+        },1000);
+        $('#alertFailure').animate({
+            top:"-100px"
+        },1000);
     }
 </script>
 </body>

@@ -9,9 +9,9 @@ import java.util.List;
  */
 public interface TaskMapper {
 
- /*    int add(Task task);
-     int delete(Task task);
-     int update(Task task);
-     int selectById(Integer id);*/
-     List<Task> selectAll();
+    List<Task> selectAll();
+    int selectMaxNumber();
+    int insert(Task task);
+    int deleteById(String id);
+    Task selectById(String id);
 }

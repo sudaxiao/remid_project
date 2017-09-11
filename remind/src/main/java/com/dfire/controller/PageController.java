@@ -20,8 +20,7 @@ public class PageController {
 
     @RequestMapping("/{pageName}")
     public ModelAndView pageSkip(@PathVariable("pageName") String pageName){
-        ModelAndView modelAndView =new ModelAndView("index");
-        modelAndView.addObject("name",pageName);
+        ModelAndView modelAndView =new ModelAndView(pageName);
         return modelAndView;
     }
     @RequestMapping("/test")

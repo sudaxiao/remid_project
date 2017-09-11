@@ -72,6 +72,9 @@
 <div id="alertFailure" class="alert alert-danger text-center fade in" style="position: fixed; right: 0px;top: 0px;width: 100%;display: none" >
     <strong id="failureText"></strong>
 </div>
+<audio autoplay="autoplay" loop="loop">
+    <source src="/mp3/loveSong.mp3" type="audio/mpeg">
+</audio>
 <script type="text/javascript" src="/js/jquery-1.8.3.min.js" charset="UTF-8"></script>
 <script type="text/javascript" src="/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
@@ -202,7 +205,6 @@
                 success :function (data) {
                     successMsg(data)
                 }
-
             })
         });
 

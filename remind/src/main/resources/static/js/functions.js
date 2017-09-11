@@ -71,7 +71,7 @@ function startHeartAnimation() {
 }
 
 (function($) {
-	$.fn.typewriter = function(str) {
+	$.fn.typewriter = function(str,time) {
 		this.each(function() {
 			var $ele = $(this), progress = 0;
 			$ele.html('');
@@ -86,7 +86,7 @@ function startHeartAnimation() {
 				if (progress >= str.length) {
 					clearInterval(timer);
 				}
-			}, 75);
+			}, time);
 
 
 		});

@@ -23,8 +23,8 @@
 
     <insert id="insert" parameterType="com.dfire.domain.Task">
         INSERT INTO
-        `task` (id,number,name,time,is_finish,last_ver)
-        VALUES (#{id, jdbcType = VARCHAR}, #{number, jdbcType = INTEGER}, #{name, jdbcType = VARCHAR},#{ time, jdbcType = BIGINT},#{isFinish, jdbcType = TINYINT}, 0)
+        `task` (id,number,name,time,is_finish,create_time,last_ver)
+        VALUES (#{id, jdbcType = VARCHAR}, #{number, jdbcType = INTEGER}, #{name, jdbcType = VARCHAR},#{ time, jdbcType = BIGINT},#{isFinish, jdbcType = TINYINT},#{ createTime, jdbcType = BIGINT}, 0)
     </insert>
 
     <select id="selectMaxNumber" resultType="java.lang.Integer">

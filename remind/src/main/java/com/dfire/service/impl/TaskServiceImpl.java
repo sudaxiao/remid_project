@@ -37,7 +37,13 @@ public class TaskServiceImpl implements TaskService {
             TaskVo taskVo = new TaskVo();
             BeanUtils.copyProperties(task, taskVo);
             taskVo.setTime(DateTimeTransUtil.dateTimeLongToString(task.getTime()));
-            float progress = ((float) (System.currentTimeMillis() - task.getCreateTime()) / (float) (task.getTime() - task.getCreateTime())) * 100;
+            float progress = 0.0f;
+            if(System.currentTimeMillis() >= task.getTime()) {
+                progress = 150;
+            } else {
+                progress = ((float) (System.currentTimeMillis() - task.getCreateTime()) / (float) (task.getTime() - task.getCreateTime())) * 100;
+            }
+
 
             taskVo.setProgress(progress < 0 ? -progress : progress);
             if (progress <= 60) {
